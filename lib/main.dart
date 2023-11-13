@@ -1,3 +1,4 @@
+import 'package:calendar_app/screens/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -11,11 +12,25 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Calendar',
       theme: ThemeData(
         primarySwatch: Colors.blue,
+        textTheme: const TextTheme(
+          titleLarge: TextStyle(
+            fontSize: 48,
+            fontWeight: FontWeight.bold,
+          ),
+          titleMedium: TextStyle(
+            fontSize: 16,
+          ),
+          titleSmall: TextStyle(
+            fontSize: 12,
+          ),
+        ),
       ),
-      home: const MyHomePage(title: 'Flutter Calendar Home Page'),
+      //home: const MyHomePage(title: 'Flutter Calendar Home Page'),
+      home: const LoginScreen(),
     );
   }
 }
