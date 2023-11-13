@@ -1,3 +1,7 @@
+import 'package:calendar_app/screens/register_screen.dart';
+import 'package:calendar_app/widgets/button_intext.dart';
+import 'package:calendar_app/widgets/button_large.dart';
+import 'package:calendar_app/widgets/text_input.dart';
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -24,115 +28,52 @@ class _LoginScreenState extends State<LoginScreen> {
           vertical: 60,
         ),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Expanded(
-              flex: 3,
-              child: SizedBox(
-                width: double.infinity,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Welcome!',
-                      style: Theme.of(context).textTheme.titleLarge,
-                    ),
-                    Text(
-                      'Enter Your Username & Password',
-                      style: Theme.of(context).textTheme.titleMedium,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            Expanded(
-              flex: 3,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  TextFormField(
-                    decoration: const InputDecoration(
-                      border: UnderlineInputBorder(),
-                      contentPadding: EdgeInsets.only(
-                        left: 5,
-                      ),
-                      labelText: 'Username',
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  TextFormField(
-                    obscureText: true,
-                    decoration: const InputDecoration(
-                      border: UnderlineInputBorder(),
-                      contentPadding: EdgeInsets.only(
-                        left: 5,
-                      ),
-                      labelText: 'Password',
-                    ),
-                  ),
-                ],
+            SizedBox(
+              width: double.infinity,
+              child: Text(
+                'Welcome!',
+                style: Theme.of(context).textTheme.titleLarge,
               ),
             ),
             const SizedBox(
+              height: 60,
+            ),
+            const TextInput(obscureText: false, labelText: 'Username'),
+            const SizedBox(
+              height: 10,
+            ),
+            const TextInput(obscureText: true, labelText: 'Password'),
+            const SizedBox(
               height: 20,
             ),
-            Expanded(
-              flex: 4,
-              child: SizedBox(
-                width: double.infinity,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.white, // Màu của text
-                        backgroundColor: Colors.black, // Màu nền của nút
-                        shape: RoundedRectangleBorder(
-                          // Bo góc
-                          borderRadius: BorderRadius.circular(20), // Độ bo góc
-                        ),
-                      ),
-                      onPressed: () {},
-                      child: Container(
-                        width: double.infinity, // Chiều rộng tối đa
-                        alignment: Alignment.center, // Căn giữa text
-                        child: const Text('Login'),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 30,
-                      child: TextButton(
-                        onPressed: () {},
-                        child: Text(
-                          'Forgotten Password?',
-                          style: Theme.of(context).textTheme.titleSmall,
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 40,
-                      child: TextButton(
-                        onPressed: () {},
-                        child: RichText(
-                          text: TextSpan(
-                              style: Theme.of(context).textTheme.titleMedium,
-                              children: const [
-                                TextSpan(text: 'Or '),
-                                TextSpan(
-                                  text: 'Create A New Account',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    decoration: TextDecoration.underline,
-                                  ),
-                                ),
-                              ]),
-                        ),
-                      ),
-                    ),
-                  ],
+            ButtonLarge(
+              content: 'Login',
+              onPressed: () {},
+            ),
+            SizedBox(
+              height: 30,
+              child: TextButton(
+                onPressed: () {},
+                child: Text(
+                  'Forgotten Password?',
+                  style: Theme.of(context).textTheme.titleSmall,
                 ),
+              ),
+            ),
+            SizedBox(
+              height: 40,
+              child: ButtonInText(
+                text: 'Or ',
+                textTap: 'Create A New Account',
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (ctx) => const RegisterScreen(),
+                    ),
+                  );
+                },
               ),
             ),
           ],
