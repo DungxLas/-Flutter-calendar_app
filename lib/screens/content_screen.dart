@@ -83,9 +83,7 @@ class _ContentScreenState extends State<ContentScreen> {
               _focusedDay = focusedDay;
             },
           ),
-          Container(
-            child: Text('Hiển thị event'),
-          ), // Hiển thị event
+          const Text('Hiển thị event'), // Hiển thị event
         ],
       ),
     );

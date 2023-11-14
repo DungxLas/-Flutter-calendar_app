@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
 
 class TextInput extends StatefulWidget {
-  const TextInput(
-      {super.key, required this.obscureText, required this.labelText});
+  const TextInput({
+    super.key,
+    required this.obscureText,
+    required this.labelText,
+    required this.validator,
+    required this.onSaved,
+  });
   final bool obscureText;
   final String labelText;
+  final Function(String?) validator;
+  final Function(String?) onSaved;
 
   @override
   State<TextInput> createState() => _TextInputState();
@@ -22,6 +29,15 @@ class _TextInputState extends State<TextInput> {
         ),
         labelText: widget.labelText,
       ),
+      autocorrect: false,
+      textCapitalization: TextCapitalization.none,
+      validator: (value) {
+        widget.validator(value);
+        return null;
+      },
+      onSaved: (value) {
+        widget.onSaved(value);
+      },
     );
   }
 }

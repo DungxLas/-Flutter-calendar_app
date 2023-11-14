@@ -1,5 +1,5 @@
 import 'package:calendar_app/screens/content_screen.dart';
-import 'package:calendar_app/screens/login_screen.dart';
+import 'package:calendar_app/screens/auth_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         textTheme: const TextTheme(
           titleLarge: TextStyle(
-            fontSize: 35,
+            fontSize: 31,
             fontWeight: FontWeight.bold,
           ),
           titleMedium: TextStyle(
@@ -29,8 +29,8 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      home: const ContentScreen(),
-      //home: const LoginScreen(),
+      //home: const ContentScreen(),
+      home: const AuthScreen(),
     );
   }
 }
