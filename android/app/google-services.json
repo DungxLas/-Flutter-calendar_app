@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "264194556345",
+    "firebase_url": "https://flutter-prep-7878d-default-rtdb.firebaseio.com",
+    "project_id": "flutter-prep-7878d",
+    "storage_bucket": "flutter-prep-7878d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:264194556345:android:005940132547db8d423668",
+        "android_client_info": {
+          "package_name": "com.example.calendar_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJWDlToxPhVcVjMEKGQSIsKdU-4yw_uYk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

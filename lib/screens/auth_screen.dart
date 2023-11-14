@@ -1,7 +1,8 @@
+import 'package:flutter/material.dart';
+
 import 'package:calendar_app/widgets/button_intext.dart';
 import 'package:calendar_app/widgets/button_large.dart';
 import 'package:calendar_app/widgets/text_input.dart';
-import 'package:flutter/material.dart';
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
@@ -21,8 +22,10 @@ class _AuthScreenState extends State<AuthScreen> {
   void _submit() async {
     final isValid = _form.currentState!.validate();
 
-    if (!isValid) {
-      return;
+    if (isValid) {
+      _form.currentState!.save();
+      print(_enteredEmail);
+      print(_enteredPassword);
     }
   }
 
@@ -69,6 +72,7 @@ class _AuthScreenState extends State<AuthScreen> {
                               !value.contains('@')) {
                             return 'Please enter a valid email address.';
                           }
+                          return null;
                         },
                         onSaved: (String? value) {
                           _enteredEmail = value!;
@@ -84,6 +88,7 @@ class _AuthScreenState extends State<AuthScreen> {
                           if (value == null || value.trim().length < 6) {
                             return 'Password must be at least 6 characters long.';
                           }
+                          return null;
                         },
                         onSaved: (String? value) {
                           _enteredPassword = value!;
@@ -101,6 +106,7 @@ class _AuthScreenState extends State<AuthScreen> {
                                 if (value == null || value.trim().length < 6) {
                                   return 'Password must be at least 6 characters long.';
                                 }
+                                return null;
                               },
                               onSaved: (String? value) {
                                 _enteredRePassword = value!;

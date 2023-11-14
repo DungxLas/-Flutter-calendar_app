@@ -10,7 +10,7 @@ class TextInput extends StatefulWidget {
   });
   final bool obscureText;
   final String labelText;
-  final Function(String?) validator;
+  final String? Function(String?) validator;
   final Function(String?) onSaved;
 
   @override
@@ -32,8 +32,7 @@ class _TextInputState extends State<TextInput> {
       autocorrect: false,
       textCapitalization: TextCapitalization.none,
       validator: (value) {
-        widget.validator(value);
-        return null;
+        return widget.validator(value);
       },
       onSaved: (value) {
         widget.onSaved(value);
