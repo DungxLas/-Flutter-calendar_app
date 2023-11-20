@@ -36,29 +36,35 @@ class _AuthScreenState extends State<AuthScreen> {
       return;
     }
 
-    if (_isLogin) {
-      // log users in
-      try {
+    try {
+      if (_isLogin) {
+        // log users in
         final userCredentials = await _firebase.signInWithEmailAndPassword(
           email: _enteredEmail,
           password: _enteredPassword,
         );
-        print(userCredentials);
-      } on FirebaseAuthException catch (e) {}
-    } else {
-      // register users
-      try {
+      } else {
+        // register users
         final userCredentials = await _firebase.createUserWithEmailAndPassword(
           email: _enteredEmail,
           password: _enteredPassword,
         );
-        print(userCredentials);
-      } on FirebaseAuthException catch (error) {
-        ScaffoldMessenger.of(context).clearSnackBars();
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(error.message ?? 'Authentication failed.'),
-        ));
       }
+    } on FirebaseAuthException catch (error) {
+      // if (mounted) {
+      //   ScaffoldMessenger.of(context).clearSnackBars();
+      //   ScaffoldMessenger.of(context).showSnackBar(
+      //     SnackBar(
+      //       content: Text(error.message ?? 'Authentication failed.'),
+      //     ),
+      //   );
+      // }
+      ScaffoldMessenger.of(context).clearSnackBars();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(error.message ?? 'Authentication failed.'),
+        ),
+      );
     }
   }
 
