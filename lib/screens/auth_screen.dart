@@ -38,6 +38,13 @@ class _AuthScreenState extends State<AuthScreen> {
 
     if (_isLogin) {
       // log users in
+      try {
+        final userCredentials = await _firebase.signInWithEmailAndPassword(
+          email: _enteredEmail,
+          password: _enteredPassword,
+        );
+        print(userCredentials);
+      } on FirebaseAuthException catch (e) {}
     } else {
       // register users
       try {
