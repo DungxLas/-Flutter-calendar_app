@@ -1,9 +1,10 @@
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
-import 'package:calendar_app/widgets/button_intext.dart';
-import 'package:calendar_app/widgets/button_large.dart';
-import 'package:calendar_app/widgets/text_input.dart';
+import 'package:calendar_app/widgets/user_image_picker.dart';
 
 final _firebase = FirebaseAuth.instance;
 
@@ -20,23 +21,29 @@ class _AuthScreenState extends State<AuthScreen> {
   var _isLogin = true;
   var _enteredEmail = '';
   var _enteredPassword = '';
-  var _enteredRePassword = '';
+  //var _enteredRePassword = '';
+  File? _selectedImage;
+  var _isAuthenticating = false;
 
   void _submit() async {
     final isValid = _form.currentState!.validate();
 
-    if (!isValid) {
+    if (!isValid || !_isLogin && _selectedImage == null) {
+      // show error message ...
       return;
     }
 
     _form.currentState!.save();
 
-    if (_enteredPassword != _enteredRePassword) {
-      // RePassword don't macth Password
-      return;
-    }
+    // if (_enteredPassword != _enteredRePassword) {
+    //   // RePassword don't macth Password
+    //   return;
+    // }
 
     try {
+      setState(() {
+        _isAuthenticating = true;
+      });
       if (_isLogin) {
         // log users in
         final userCredentials = await _firebase.signInWithEmailAndPassword(
@@ -49,22 +56,28 @@ class _AuthScreenState extends State<AuthScreen> {
           email: _enteredEmail,
           password: _enteredPassword,
         );
+
+        final storageRef = FirebaseStorage.instance
+            .ref()
+            .child('user_images')
+            .child('${userCredentials.user!.uid}.jpg');
+
+        await storageRef.putFile(_selectedImage!);
+        final imageUrl = await storageRef.getDownloadURL();
+        print(imageUrl);
       }
     } on FirebaseAuthException catch (error) {
-      // if (mounted) {
-      //   ScaffoldMessenger.of(context).clearSnackBars();
-      //   ScaffoldMessenger.of(context).showSnackBar(
-      //     SnackBar(
-      //       content: Text(error.message ?? 'Authentication failed.'),
-      //     ),
-      //   );
-      // }
-      ScaffoldMessenger.of(context).clearSnackBars();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(error.message ?? 'Authentication failed.'),
-        ),
-      );
+      if (error.code == 'email-already-in-use') {
+        // ...
+      }
+      if (mounted) {
+        ScaffoldMessenger.of(context).clearSnackBars();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(error.message ?? 'Authentication failed.'),
+          ),
+        );
+      }
     }
   }
 
@@ -87,6 +100,7 @@ class _AuthScreenState extends State<AuthScreen> {
           child: SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
               children: [
                 SizedBox(
                   width: double.infinity,
@@ -102,102 +116,122 @@ class _AuthScreenState extends State<AuthScreen> {
                   key: _form,
                   child: Column(
                     children: [
-                      TextInput(
-                        obscureText: false,
-                        labelText: 'Email',
-                        validator: (String? value) {
+                      if (!_isLogin)
+                        UserImagePicker(
+                          onPickImage: (pickedImage) {
+                            _selectedImage = pickedImage;
+                          },
+                        ),
+                      TextFormField(
+                        decoration:
+                            const InputDecoration(labelText: 'Email Address'),
+                        keyboardType: TextInputType.emailAddress,
+                        autocorrect: false,
+                        textCapitalization: TextCapitalization.none,
+                        validator: (value) {
                           if (value == null ||
                               value.trim().isEmpty ||
                               !value.contains('@')) {
                             return 'Please enter a valid email address.';
                           }
+
                           return null;
                         },
-                        onSaved: (String? value) {
+                        onSaved: (value) {
                           _enteredEmail = value!;
                         },
                       ),
                       const SizedBox(
                         height: 10,
                       ),
-                      TextInput(
+                      TextFormField(
+                        decoration:
+                            const InputDecoration(labelText: 'Password'),
                         obscureText: true,
-                        labelText: 'Password',
-                        validator: (String? value) {
+                        validator: (value) {
                           if (value == null || value.trim().length < 6) {
                             return 'Password must be at least 6 characters long.';
                           }
                           return null;
                         },
-                        onSaved: (String? value) {
+                        onSaved: (value) {
                           _enteredPassword = value!;
                         },
                       ),
                       const SizedBox(
-                        height: 10,
+                        height: 15,
                       ),
-                      _isLogin
-                          ? Container()
-                          : TextInput(
-                              obscureText: true,
-                              labelText: 'Re-write Password',
-                              validator: (String? value) {
-                                if (value == null || value.trim().length < 6) {
-                                  return 'Password must be at least 6 characters long.';
-                                }
-                                return null;
-                              },
-                              onSaved: (String? value) {
-                                _enteredRePassword = value!;
-                              },
-                            ),
-                      SizedBox(
-                        height: _isLogin ? 10 : 20,
-                      ),
+                      // _isLogin
+                      //     ? Container()
+                      //     : TextInput(
+                      //         obscureText: true,
+                      //         labelText: 'Re-write Password',
+                      //         validator: (String? value) {
+                      //           if (value == null || value.trim().length < 6) {
+                      //             return 'Password must be at least 6 characters long.';
+                      //           }
+                      //           return null;
+                      //         },
+                      //         onSaved: (String? value) {
+                      //           _enteredRePassword = value!;
+                      //         },
+                      //       ),
+                      // SizedBox(
+                      //   height: _isLogin ? 10 : 20,
+                      // ),
                     ],
                   ),
                 ),
-                ButtonLarge(
-                  content: _isLogin ? 'Login' : 'Sign Up',
-                  onPressed: _submit,
-                ),
-                _isLogin
-                    ? SizedBox(
-                        height: 30,
-                        child: TextButton(
-                          onPressed: () {},
-                          child: Text(
-                            'Forgotten Password?',
-                            style: Theme.of(context).textTheme.titleSmall,
+                _isAuthenticating
+                    ? const CircularProgressIndicator()
+                    : ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: Colors.white, // Màu của text
+                          backgroundColor: Colors.black, // Màu nền của nút
+                          shape: RoundedRectangleBorder(
+                            // Bo góc
+                            borderRadius:
+                                BorderRadius.circular(20), // Độ bo góc
                           ),
                         ),
-                      )
-                    : Container(),
-                _isLogin
-                    ? SizedBox(
-                        height: 40,
-                        child: ButtonInText(
-                          text: 'Or ',
-                          textTap: 'Create A New Account',
-                          onTap: () {
-                            setState(() {
-                              _isLogin = !_isLogin;
-                            });
-                          },
-                        ),
-                      )
-                    : SizedBox(
-                        height: 40,
-                        child: ButtonInText(
-                          text: 'Already have an account? ',
-                          textTap: 'Login',
-                          onTap: () {
-                            setState(() {
-                              _isLogin = !_isLogin;
-                            });
-                          },
+                        onPressed: _submit,
+                        child: Container(
+                          width: double.infinity, // Chiều rộng tối đa
+                          alignment: Alignment.center, // Căn giữa text
+                          child: Text(
+                            _isLogin ? 'Login' : 'Signup',
+                            style: const TextStyle(
+                              fontSize: 20,
+                            ),
+                          ),
                         ),
                       ),
+                if (_isLogin)
+                  TextButton(
+                    onPressed: () {},
+                    child: Text(
+                      'Forgotten Password?',
+                      style: TextStyle(
+                        fontSize:
+                            Theme.of(context).textTheme.titleSmall!.fontSize,
+                        color: Colors.black38,
+                      ),
+                    ),
+                  ),
+                if (!_isAuthenticating)
+                  TextButton(
+                    onPressed: () {
+                      setState(() {
+                        _isLogin = !_isLogin;
+                      });
+                    },
+                    child: Text(
+                      _isLogin
+                          ? 'Create an account'
+                          : 'I already have an account',
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                  ),
               ],
             ),
           ),

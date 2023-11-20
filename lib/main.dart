@@ -39,18 +39,18 @@ class MyApp extends StatelessWidget {
         ),
       ),
       home: StreamBuilder(
-        stream: FirebaseAuth.instance.authStateChanges(),
-        builder: (ctx, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const SplashScreen();
-          }
-          if (snapshot.hasData) {
-            return const ChatScreen();
-          }
+          stream: FirebaseAuth.instance.authStateChanges(),
+          builder: (ctx, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const SplashScreen();
+            }
 
-          return const AuthScreen();
-        },
-      ),
+            if (snapshot.hasData) {
+              return const ChatScreen();
+            }
+
+            return const AuthScreen();
+          }),
     );
   }
 }

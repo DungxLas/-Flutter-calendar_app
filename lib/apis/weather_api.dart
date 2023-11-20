@@ -12,8 +12,6 @@ class WeatherAPI {
 
     if (response.statusCode == 200) {
       return jsonDecode(response.body);
-    } else {
-      print(response.statusCode);
-    }
+    } else {}
   }
 }
