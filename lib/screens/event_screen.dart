@@ -31,73 +31,83 @@ class _EventScreenState extends State<EventScreen> {
       ),
       body: Center(
         child: Card(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextFormField(
-                controller: _enventController,
-                decoration: const InputDecoration(
-                  labelText: 'Please type new event',
-                ),
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: () async {
-                        TimeOfDay? selectedTime = await showTimePicker(
-                          context: context,
-                          initialTime: TimeOfDay.now(),
-                        );
-                        if (selectedTime != null) {
-                          setState(() {
-                            _startTime = selectedTime;
-                          });
-                        }
-                      },
-                      child: Text(
-                        _startTime == null
-                            ? 'Select start time'
-                            : 'Start ${_startTime?.format(context)}',
-                      ),
-                    ),
+          margin: const EdgeInsets.symmetric(horizontal: 20),
+          shadowColor: Colors.black,
+          elevation: 10,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextFormField(
+                  controller: _enventController,
+                  decoration: const InputDecoration(
+                    labelText: 'Please type new event',
                   ),
-                  const Icon(Icons.arrow_forward),
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: () async {
-                        final buildContext = context;
-                        TimeOfDay? selectedTime = await showTimePicker(
-                          context: buildContext,
-                          initialTime: TimeOfDay.now(),
-                        );
-                        if (selectedTime != null) {
-                          if (_startTime != null &&
-                              (selectedTime.hour * 60 + selectedTime.minute) <
-                                  (_startTime!.hour * 60 +
-                                      _startTime!.minute)) {
-                            ScaffoldMessenger.of(buildContext).showSnackBar(
-                              const SnackBar(
-                                  content: Text(
-                                      'The ending time cannot be earlier than the starting time!')),
-                            );
-                          } else {
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          TimeOfDay? selectedTime = await showTimePicker(
+                            context: context,
+                            initialTime: TimeOfDay.now(),
+                          );
+                          if (selectedTime != null) {
                             setState(() {
-                              _endTime = selectedTime;
+                              _startTime = selectedTime;
                             });
                           }
-                        }
-                      },
-                      child: Text(
-                        _startTime == null
-                            ? 'Select end time'
-                            : 'End ${_endTime?.format(context)}',
+                        },
+                        child: Text(
+                          _startTime == null
+                              ? 'Select start time'
+                              : 'Start ${_startTime?.format(context)}',
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-            ],
+                    const Icon(Icons.arrow_forward),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          final buildContext = context;
+                          TimeOfDay? selectedTime = await showTimePicker(
+                            context: buildContext,
+                            initialTime: TimeOfDay.now(),
+                          );
+                          if (selectedTime != null) {
+                            if (_startTime != null &&
+                                (selectedTime.hour * 60 + selectedTime.minute) <
+                                    (_startTime!.hour * 60 +
+                                        _startTime!.minute)) {
+                              // ignore: use_build_context_synchronously
+                              ScaffoldMessenger.of(buildContext).showSnackBar(
+                                const SnackBar(
+                                    content: Text(
+                                        'The ending time cannot be earlier than the starting time!')),
+                              );
+                            } else {
+                              setState(() {
+                                _endTime = selectedTime;
+                              });
+                            }
+                          }
+                        },
+                        child: Text(
+                          _startTime == null
+                              ? 'Select end time'
+                              : 'End ${_endTime?.format(context)}',
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),

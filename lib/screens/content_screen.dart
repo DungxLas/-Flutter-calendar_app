@@ -1,4 +1,5 @@
 import 'package:calendar_app/screens/event_screen.dart';
+import 'package:calendar_app/widgets/event_list.dart';
 import 'package:calendar_app/widgets/weather_info.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -97,7 +98,7 @@ class _ContentScreenState extends State<ContentScreen> {
               _focusedDay = focusedDay;
             },
           ),
-          const Text('Hiển thị event'), // Hiển thị event
+          const EventList(), // Hiển thị event
         ],
       ),
     );
