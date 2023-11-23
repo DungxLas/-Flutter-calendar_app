@@ -1,3 +1,4 @@
+import 'package:calendar_app/screens/event_screen.dart';
 import 'package:calendar_app/widgets/weather_info.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -45,8 +46,21 @@ class _ContentScreenState extends State<ContentScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          //title: Text(widget.title),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => EventScreen(
+                    selectedDay: _selectedDay!,
+                  ),
+                ),
+              );
+            },
+            icon: Icon(Icons.add),
           ),
+        ],
+      ),
       body: Column(
         children: [
           Container(
