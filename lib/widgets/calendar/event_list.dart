@@ -10,7 +10,7 @@ class EventList extends StatelessWidget {
       stream: FirebaseFirestore.instance.collection('event').snapshots(),
       builder: (ctx, eventSnapshots) {
         if (eventSnapshots.connectionState == ConnectionState.waiting) {
-          return Center(
+          return const Center(
             child: CircularProgressIndicator(),
           );
         }

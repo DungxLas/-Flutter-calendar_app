@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+//Create, Read, Update, Delete --> event
 class EventScreen extends StatefulWidget {
   const EventScreen({super.key, required this.selectedDay});
 
