@@ -1,10 +1,10 @@
-import 'package:calendar_app/screens/event_screen.dart';
-import 'package:calendar_app/widgets/event_list.dart';
+import 'package:calendar_app/screens/calendar/event_screen.dart';
+import 'package:calendar_app/widgets/calendar/event_list.dart';
 import 'package:calendar_app/widgets/weather_info.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-import '../apis/weather_api.dart';
+import '../../apis/weather_api.dart';
 
 class ContentScreen extends StatefulWidget {
   const ContentScreen({super.key});

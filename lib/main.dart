@@ -6,7 +6,7 @@ import 'firebase_options.dart';
 import 'package:calendar_app/screens/auth_screen.dart';
 //import 'package:calendar_app/screens/chat.dart';
 import 'package:calendar_app/screens/splash.dart';
-import 'package:calendar_app/screens/content_screen.dart';
+import 'package:calendar_app/screens/calendar/content_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
