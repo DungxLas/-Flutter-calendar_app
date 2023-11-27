@@ -38,30 +38,56 @@ class EventList extends StatelessWidget {
 
         final loadedEvent = eventSnapshots.data!.docs;
 
-        return ListView.builder(
-          itemCount: loadedEvent.length,
-          itemBuilder: (ctx, index) {
-            final event = loadedEvent[index].data();
-            final eventText = event['text'];
-            final eventStart = event['start'];
-            final eventEnd = event['end'];
+        return Expanded(
+          child: ListView.builder(
+            //shrinkWrap: true,
+            itemCount: loadedEvent.length,
+            itemBuilder: (ctx, index) {
+              final event = loadedEvent[index].data();
+              final eventText = event['text'];
+              final eventStart = event['start'];
+              final eventEnd = event['end'];
 
-            return Card(
-              child: Row(
-                children: [
-                  CircleAvatar(
-                    child: Column(
-                      children: [
-                        Text(eventStart),
-                        Text(eventEnd),
-                      ],
-                    ),
+              return Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                child: Card(
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 60,
+                        height: 60,
+                        margin: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 5),
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.grey,
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(eventStart),
+                            Text(eventEnd),
+                          ],
+                        ),
+                      ),
+                      Expanded(
+                        child: Container(
+                          margin: const EdgeInsets.all(8),
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Text(eventText),
+                        ),
+                      ),
+                    ],
                   ),
-                  Text(eventText),
-                ],
-              ),
-            );
-          },
+                ),
+              );
+            },
+          ),
         );
       },
     );

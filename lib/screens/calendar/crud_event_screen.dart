@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -19,13 +21,50 @@ class _EventScreenState extends State<EventScreen> {
   TimeOfDay? _endTime;
 
   @override
+  void dispose() {
+    _enventController.dispose();
+    super.dispose();
+  }
+
+  void _submitEvent() async {
+    final enteredEvent = _enventController.text;
+
+    if (enteredEvent.trim().isEmpty) {
+      return;
+    }
+
+    FocusScope.of(context).unfocus();
+    _enventController.clear();
+
+    // send to Firebase
+    final user = FirebaseAuth.instance.currentUser!;
+    final userData = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(user.uid)
+        .get();
+
+    FirebaseFirestore.instance.collection('event').add({
+      'text': enteredEvent,
+      'start': '${_startTime!.hour}:${_startTime!.minute}',
+      'end': '${_endTime!.hour}:${_endTime!.minute}',
+      'createdFor': DateFormat('dd/MM/yyyy').format(widget.selectedDay),
+      'createedAt': Timestamp.now(),
+      'userId': user.uid,
+      'username': userData.data()!['username'],
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(DateFormat('dd/MM/yyyy').format(widget.selectedDay)),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              _submitEvent();
+              Navigator.of(context).pop();
+            },
             icon: const Icon(Icons.check),
           ),
         ],
