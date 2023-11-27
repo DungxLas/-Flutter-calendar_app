@@ -1,13 +1,22 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class EventList extends StatelessWidget {
-  const EventList({super.key});
+  const EventList({super.key, required this.eventDay});
+
+  final String eventDay;
 
   @override
   Widget build(BuildContext context) {
+    final authenticatedUser = FirebaseAuth.instance.currentUser!;
+
     return StreamBuilder(
-      stream: FirebaseFirestore.instance.collection('event').snapshots(),
+      stream: FirebaseFirestore.instance
+          .collection('event')
+          .where('userId', isEqualTo: authenticatedUser.uid)
+          .where('createdFor', isEqualTo: eventDay)
+          .snapshots(),
       builder: (ctx, eventSnapshots) {
         if (eventSnapshots.connectionState == ConnectionState.waiting) {
           return const Center(

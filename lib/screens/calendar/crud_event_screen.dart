@@ -22,7 +22,7 @@ class _EventScreenState extends State<EventScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(DateFormat('dd/MM').format(widget.selectedDay)),
+        title: Text(DateFormat('dd/MM/yyyy').format(widget.selectedDay)),
         actions: [
           IconButton(
             onPressed: () {},
