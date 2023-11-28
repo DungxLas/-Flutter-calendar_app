@@ -5,53 +5,90 @@ import 'package:intl/intl.dart';
 
 //Create, Read, Update, Delete --> event
 class EventScreen extends StatefulWidget {
-  const EventScreen({super.key, required this.selectedDay});
+  const EventScreen(
+      {super.key,
+      required this.selectedDay,
+      this.start,
+      this.end,
+      this.event,
+      this.eventId});
 
   final DateTime selectedDay;
+  final String? event;
+  final String? eventId;
+  final String? start;
+  final String? end;
 
   @override
   State<EventScreen> createState() => _EventScreenState();
 }
 
 class _EventScreenState extends State<EventScreen> {
-  final _enventController = TextEditingController();
+  TextEditingController? _eventController;
 
   TimeOfDay? _startTime;
 
   TimeOfDay? _endTime;
 
   @override
+  void initState() {
+    super.initState();
+
+    _eventController = TextEditingController(text: widget.event);
+    _startTime = widget.start == null
+        ? null
+        : TimeOfDay.fromDateTime(DateFormat('HH:mm').parse(widget.start!));
+    _endTime = widget.end == null
+        ? null
+        : TimeOfDay.fromDateTime(DateFormat('HH:mm').parse(widget.end!));
+  }
+
+  @override
   void dispose() {
-    _enventController.dispose();
+    _eventController!.dispose();
     super.dispose();
   }
 
   void _submitEvent() async {
-    final enteredEvent = _enventController.text;
+    final enteredEvent = _eventController!.text.trim();
 
-    if (enteredEvent.trim().isEmpty) {
+    if (enteredEvent.isEmpty) {
       return;
     }
 
     FocusScope.of(context).unfocus();
-    _enventController.clear();
+    _eventController!.clear();
 
-    // send to Firebase
     final user = FirebaseAuth.instance.currentUser!;
     final userData = await FirebaseFirestore.instance
         .collection('users')
         .doc(user.uid)
         .get();
-
-    FirebaseFirestore.instance.collection('event').add({
+    final eventDetails = {
       'text': enteredEvent,
       'start': '${_startTime!.hour}:${_startTime!.minute}',
       'end': '${_endTime!.hour}:${_endTime!.minute}',
       'createdFor': DateFormat('dd/MM/yyyy').format(widget.selectedDay),
-      'createedAt': Timestamp.now(),
+      'createdAt': Timestamp.now(),
       'userId': user.uid,
       'username': userData.data()!['username'],
-    });
+    };
+
+    if (widget.event != null &&
+        widget.eventId != null &&
+        widget.start != null &&
+        widget.end != null) {
+      await FirebaseFirestore.instance
+          .collection('event')
+          .doc(widget.eventId)
+          .update(eventDetails);
+    } else {
+      await FirebaseFirestore.instance.collection('event').add(eventDetails);
+    }
+  }
+
+  void _deleteEvent() async {
+    FirebaseFirestore.instance.collection('event').doc(widget.eventId).delete();
   }
 
   @override
@@ -60,6 +97,16 @@ class _EventScreenState extends State<EventScreen> {
       appBar: AppBar(
         title: Text(DateFormat('dd/MM/yyyy').format(widget.selectedDay)),
         actions: [
+          if (widget.event != null &&
+              widget.eventId != null &&
+              widget.start != null &&
+              widget.end != null)
+            IconButton(
+                onPressed: () {
+                  _deleteEvent();
+                  Navigator.of(context).pop();
+                },
+                icon: const Icon(Icons.delete)),
           IconButton(
             onPressed: () {
               _submitEvent();
@@ -80,7 +127,7 @@ class _EventScreenState extends State<EventScreen> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 TextFormField(
-                  controller: _enventController,
+                  controller: _eventController,
                   decoration: const InputDecoration(
                     labelText: 'Please type new event',
                   ),

@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -27,6 +28,7 @@ class _ContentScreenState extends State<ContentScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.purple[50],
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(40),
         child: AppBar(
@@ -45,12 +47,18 @@ class _ContentScreenState extends State<ContentScreen> {
               },
               icon: const Icon(Icons.add),
             ),
+            IconButton(
+              onPressed: () {
+                FirebaseAuth.instance.signOut();
+              },
+              icon: const Icon(
+                Icons.exit_to_app,
+              ),
+            ),
           ],
         ),
       ),
       body: Column(
-        // mainAxisAlignment: MainAxisAlignment.start,
-        // mainAxisSize: MainAxisSize.min,
         children: [
           const WeatherInfo(), // Hiển thị thời tiết
           const Divider(color: Colors.grey),

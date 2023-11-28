@@ -188,24 +188,6 @@ class _AuthScreenState extends State<AuthScreen> {
                       const SizedBox(
                         height: 15,
                       ),
-                      // _isLogin
-                      //     ? Container()
-                      //     : TextInput(
-                      //         obscureText: true,
-                      //         labelText: 'Re-write Password',
-                      //         validator: (String? value) {
-                      //           if (value == null || value.trim().length < 6) {
-                      //             return 'Password must be at least 6 characters long.';
-                      //           }
-                      //           return null;
-                      //         },
-                      //         onSaved: (String? value) {
-                      //           _enteredRePassword = value!;
-                      //         },
-                      //       ),
-                      // SizedBox(
-                      //   height: _isLogin ? 10 : 20,
-                      // ),
                     ],
                   ),
                 ),
@@ -221,7 +203,10 @@ class _AuthScreenState extends State<AuthScreen> {
                                 BorderRadius.circular(20), // Độ bo góc
                           ),
                         ),
-                        onPressed: _submit,
+                        onPressed: () {
+                          FocusManager.instance.primaryFocus?.unfocus();
+                          _submit();
+                        },
                         child: Container(
                           width: double.infinity, // Chiều rộng tối đa
                           alignment: Alignment.center, // Căn giữa text

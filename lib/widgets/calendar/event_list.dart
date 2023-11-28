@@ -2,6 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import 'package:calendar_app/screens/calendar/crud_event_screen.dart';
+import 'package:intl/intl.dart';
+
 class EventList extends StatelessWidget {
   const EventList({super.key, required this.eventDay});
 
@@ -40,10 +43,11 @@ class EventList extends StatelessWidget {
 
         return Expanded(
           child: ListView.builder(
-            //shrinkWrap: true,
+            shrinkWrap: true,
             itemCount: loadedEvent.length,
             itemBuilder: (ctx, index) {
               final event = loadedEvent[index].data();
+              final eventId = loadedEvent[index].id;
               final eventText = event['text'];
               final eventStart = event['start'];
               final eventEnd = event['end'];
@@ -51,38 +55,53 @@ class EventList extends StatelessWidget {
               return Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                child: Card(
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 60,
-                        height: 60,
-                        margin: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 5),
-                        decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.grey,
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(eventStart),
-                            Text(eventEnd),
-                          ],
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => EventScreen(
+                          selectedDay: DateFormat('dd/MM/yyyy').parse(eventDay),
+                          event: eventText,
+                          eventId: eventId,
+                          start: eventStart,
+                          end: eventEnd,
                         ),
                       ),
-                      Expanded(
-                        child: Container(
-                          margin: const EdgeInsets.all(8),
-                          padding: const EdgeInsets.all(16),
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey),
-                            borderRadius: BorderRadius.circular(10),
+                    );
+                  },
+                  child: Card(
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 60,
+                          height: 60,
+                          margin: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 5),
+                          decoration: const BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.grey,
                           ),
-                          child: Text(eventText),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(eventStart),
+                              Text(eventEnd),
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
+                        Expanded(
+                          child: Container(
+                            margin: const EdgeInsets.all(8),
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.grey),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Text(eventText),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               );
