@@ -58,7 +58,12 @@ class _NewMessageState extends State<NewMessage> {
               textCapitalization: TextCapitalization.sentences,
               autocorrect: true,
               enableSuggestions: true,
-              decoration: const InputDecoration(labelText: 'Send a message...'),
+              decoration: const InputDecoration(
+                labelText: 'Send a message...',
+                labelStyle: TextStyle(
+                  fontSize: 18,
+                ),
+              ),
             ),
           ),
           IconButton(

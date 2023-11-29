@@ -48,14 +48,24 @@ class _ChatScreenState extends State<ChatScreen> {
               ),
             ),
           ],
+          backgroundColor: Colors.yellow.shade600,
         ),
-        body: const Column(
-          children: [
-            Expanded(
-              child: ChatMessages(),
+        body: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topRight,
+              end: Alignment.bottomLeft,
+              colors: [Colors.yellow, Colors.red],
             ),
-            NewMessage(),
-          ],
+          ),
+          child: const Column(
+            children: [
+              Expanded(
+                child: ChatMessages(),
+              ),
+              NewMessage(),
+            ],
+          ),
         ));
   }
 }
